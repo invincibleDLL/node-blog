@@ -21,11 +21,16 @@ const getDetail = (id) => {
  * 新建博客
  */
 const createBlog = (blogData = {}) => {
-  const { title, content } = blogData;
-  let sql = `insert into blogs (title,content,createtime,author) values (${title},${content})`
+  const { title, content, author } = blogData;
+  const createtime = Date.now();
+  let sql = `insert into blogs (title,content,createtime,author) values ('${title}','${content}',${createtime},'${author}');`
+  return exec(sql).then(insertData => {
+    return {id: insertData.insertId }
+  });
 }
 
 module.exports = {
   getList,
-  getDetail
+  getDetail,
+  createBlog
 }
