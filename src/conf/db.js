@@ -8,6 +8,8 @@ let MYSQL_CONF = {
   database: 'myblog'
 }
 
+let REDIS_CONF
+
 if (env === 'dev') {
   MYSQL_CONF = {
     host: '47.103.20.200',
@@ -15,6 +17,11 @@ if (env === 'dev') {
     password: 'dll5820333',
     port: '3306',
     database: 'myblog'
+  }
+
+  REDIS_CONF = {
+    port: 6379,
+    host: '127.0.0.1'
   }
 }
 
@@ -26,6 +33,14 @@ if (env === 'production') {
     port: '3306',
     database: 'myblog'
   }
+
+  REDIS_CONF = {
+    port: 6379,
+    host: '127.0.0.1'
+  }
 }
 
-module.exports = MYSQL_CONF
+module.exports = {
+  MYSQL_CONF,
+  REDIS_CONF
+}
