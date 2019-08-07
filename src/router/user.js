@@ -1,4 +1,4 @@
-const { loginCheck } = require('../controller/user')
+const { login } = require('../controller/user')
 const { SuccessModel, ErrorModel } = require('../model/resModal');
 const { set } = require('../db/redis')
 
@@ -6,7 +6,7 @@ const handleUserRouter = (req, res) => {
   const method = req.method;
 
   if (method === 'POST' && req.path === '/api/user/login'){
-    return loginCheck(req.body).then(data => {
+    return login(req.body).then(data => {
       if (data.username) {
         // 服务端设置session
         req.session.username = data.username

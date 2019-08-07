@@ -1,8 +1,7 @@
 const querystring = require('querystring');
 const handleBlogRouter = require('./src/router/blog');
 const handleUserRouter = require('./src/router/user');
-
-const SESSION_DATA = {}
+const { get, set } = require('./src/db/redis')
 
 // 设置cookies过期时间
 const getCookiesExpires = () => {
@@ -59,16 +58,21 @@ const serverHandle = (req, res) => {
   // 解析session
   let needSetCookie = false
   let userId = req.cookie.userid;
-  if (userId) {
-    if (!SESSION_DATA[userId]) {
-      SESSION_DATA[userId] = {}
-    }
-  } else {
+  if (!userId) {
     needSetCookie = true
     userId = `${Date.now()}_${Math.random()}`
-    SESSION_DATA[userId] = {}
+    set(userId, {})
   }
-  req.session = SESSION_DATA[userId]
+  req.sessionId = userId
+
+  get(req.sessionId).then(sessionData => {
+    if (sessionData === null) {
+      set(req.sessionId, {})
+      req.session = {}
+    } else {
+      req.session = sessionData
+    }
+  })
 
   getPostData(req).then(postData => {
     req.body = postData;
